@@ -102,3 +102,14 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Visual Studio profiler
+*.psess
+*.vsp
+*.vspx
+*.sap
+
+# Visual Studio Trace Files
+*.e2e
+# Coverage directory used by tools like istanbul
+coverage
