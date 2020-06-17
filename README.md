@@ -1,2 +1,2 @@
-# bynes
+# Byne
 React+WebSocket+Highcharts
