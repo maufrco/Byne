@@ -8,11 +8,11 @@ import InputLabel from '@material-ui/core/InputLabel'
 import FormControl from '@material-ui/core/FormControl'
 import MenuItem from '@material-ui/core/MenuItem'
 import FormHelperText from '@material-ui/core/FormHelperText'
-
+import MonetizationOnIcon from '@material-ui/icons/MonetizationOn'
 import Select from '@material-ui/core/Select'
 // eslint-disable-next-line no-unused-vars
 import { useWs, WSSymbol } from './WSProvider'
-import { makeStyles, createStyles, Theme } from '@material-ui/core'
+import { makeStyles, createStyles, Theme, Chip } from '@material-ui/core'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -60,7 +60,7 @@ const ChartStock: React.FC = (children) => {
       {
         type: 'line',
         data: stockHistoy,
-        name: symbol as string
+        name: monitor.get(symbol!) ? `${symbol} - ${Number(monitor.get(symbol!)).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}` : ''
       }
     ],
     xAxis: {
@@ -96,9 +96,6 @@ const ChartStock: React.FC = (children) => {
         <Box display="flex" m={0} p={0} bgcolor="rgb(33, 49, 75)">
           <Box p={3} flexGrow={1} >
             <img src={ByneLogo} style={{ color: '#FFF' }} alt="BYNE – Comunicação crítica, mais simples e eficiente" />
-          </Box>
-          <Box p={3} flexGrow={4} className={classes.price} >
-            {symbol && (Number(monitor.get(symbol as WSSymbol)).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }))}
           </Box>
           <Box pr={4} display="row-reverse" justifyContent="flex-end">
 

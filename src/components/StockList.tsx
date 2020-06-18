@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     formControl: {
       margin: theme.spacing(1),
-      minWidth: '70%',
+      minWidth: '66%',
       textAlign: 'right'
 
     },
@@ -43,81 +43,56 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
-const ITEM_HEIGHT = 48
-const ITEM_PADDING_TOP = 8
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250
-    }
-  }
-}
-const names = [
-  'Oliver Hansen',
-  'Van Henry',
-  'April Tucker',
-  'Ralph Hubbard',
-  'Omar Alexander',
-  'Carlos Abbott',
-  'Miriam Wagner',
-  'Bradley Wilkerson',
-  'Virginia Andrews',
-  'Kelly Snyder'
-]
-
-function getStyles (name: string, personName: string[], theme: Theme) {
-  return {
-    fontWeight:
-      personName.indexOf(name) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium
-  }
-}
 const StockList: React.FC = () => {
   const classes = useStyles()
-  const theme = useTheme()
-  const [personName, setPersonName] = React.useState<string[]>([])
+  const { initialConfig } = useWs()
+  const [follows, setFollows] = React.useState<string[]>([])
+  const [open, setOpen] = React.useState(false)
+
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setPersonName(event.target.value as string[])
+    setFollows([event.target.value] as string[])
   }
 
-  const { initialConfig } = useWs()
+  const handleClose = () => {
+    setOpen(false)
+  }
+
+  const handleOpen = () => {
+    setOpen(true)
+  }
+
   return (
     <div style={{ width: '100%' }}>
 
       <Box boxShadow={3} p={4} m={2}>
 
         <FormControl className={classes.formControl}>
+          <InputLabel id="controlled-open-select-label">Adicionar
+          </InputLabel>
           <Select
-            labelId="demo-mutiple-chip-label"
-            id="demo-mutiple-chip"
-            multiple
-            value={personName}
-            autoWidth={true}
-            fullWidth={true}
+            labelId="controlled-open-select-label"
+            id="controlled-open-select"
+            open={open}
+            onClose={handleClose}
+            onOpen={handleOpen}
+            value={follows}
             onChange={handleChange}
-            input={<Input id="select-multiple-chip" />}
-            renderValue={(selected) => (
-              <div className={classes.chips}>
-                {(selected as string[]).map((value) => (
-                  <Chip key={value} label={value} className={classes.chip} />
-                ))}
-              </div>
-            )}
-            MenuProps={MenuProps}
           >
-            {names.map((name) => (
-              <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
-                {name}
-              </MenuItem>
-            ))}
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            {initialConfig?.stocksData.map(
+        (stock, index) => {
+          return (stock ? (
+            <MenuItem key={index} value={stock.symbol}>{stock.companyName}</MenuItem>
+          ) : null)
+        })}
           </Select>
-          <Fab color="secondary" aria-label="add" variant="extended">
-            <AddIcon className={classes.extendedIcon} />
-            Adicionar
-          </Fab>
         </FormControl>
+        <Fab size="small" color="secondary" aria-label="add" variant="round" onClick={handleOpen}>
+          <AddIcon />
+
+        </Fab>
 
         <Box borderBottom={2} mb={3} mt={1} component="div" display="block" className={classes.headerList}>
           Empresas

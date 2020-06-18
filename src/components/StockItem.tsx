@@ -2,8 +2,8 @@ import React from 'react'
 // eslint-disable-next-line no-unused-vars
 import { IStock, useWs } from './WSProvider'
 import Follows from './Follows'
-
-import { Divider, Box, makeStyles, createStyles, Theme, Hidden } from '@material-ui/core'
+import MonetizationOnIcon from '@material-ui/icons/MonetizationOn'
+import { Divider, Box, makeStyles, createStyles, Theme, Hidden, Chip } from '@material-ui/core'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -46,8 +46,11 @@ const StockItem: React.FC = props => {
         </Box>
 
         <Box>
-
-          {monitor.get(symbol!) && Number(monitor.get(symbol!)).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+          {monitor.get(symbol!) &&
+          (
+            <Chip color="primary" icon={<MonetizationOnIcon />} label={Number(monitor.get(symbol!)).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} />
+          )
+          }
 
           <Follows>{symbol}</Follows>
         </Box>
