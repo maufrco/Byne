@@ -1,16 +1,5 @@
 export const theme = {
   colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066', '#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
-  backgroundColor: {
-    linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
-    stops: [
-      [0, 'rgb(42, 42, 43)'],
-      [1, 'rgb(62, 62, 64)']
-    ],
-    style: {
-      fontFamily: '\'Unica One\', sans-serif'
-    },
-    plotBorderColor: '#606063'
-  },
   title: {
     style: {
       color: '#E0E0E3',
@@ -86,7 +75,7 @@ export const theme = {
     }
   },
   legend: {
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
     itemStyle: {
       color: '#E0E0E3'
     },
