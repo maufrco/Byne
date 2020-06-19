@@ -13,10 +13,10 @@ const WSControl : React.FC = () => {
       dispatch({ type: 'SET_CONNECT', payload: false })
       console.error('Connection closing')
       setTimeout(function () {
-        console.log('reconect')
-        WSService.getInstance()
+        console.log('reconect error')
+        WSService.init()
         dispatch({ type: 'RECONNECT', payload: true })
-      }, 5000)
+      }, 10000)
       return
     } catch (error) {
       console.error(error)
@@ -27,12 +27,25 @@ const WSControl : React.FC = () => {
     try {
       dispatch({ type: 'SET_CONNECT', payload: false })
       console.error('Connection closing')
+
       setTimeout(function () {
         console.log('reconect')
-        WSService.getInstance()
+        WSService.init()
         dispatch({ type: 'RECONNECT', payload: true })
       }, 5000)
+
       return
+    } catch (error) {
+      console.error(error)
+    }
+  }
+  service.ws.current.onopen = (e) => {
+    try {
+      console.log('CONNECTING')
+      dispatch({ type: 'SET_CONNECT', payload: true }) // setIsConnected(true)
+      // setInitialConfig(message)
+      //   dispatch({ type: 'SET_CONNECT', payload: true })
+    //  dispatch({ type: 'SET_INITIAL', payload: message })
     } catch (error) {
       console.error(error)
     }
@@ -46,11 +59,7 @@ const WSControl : React.FC = () => {
         dispatch({ type: 'SET_MONITOR', payload: [symbol, value] })
         return
       } else if (message.event === 'connected') {
-        dispatch({ type: 'SET_CONNECT', payload: true }) // setIsConnected(true)
         dispatch({ type: 'SET_INITIAL', payload: message }) // setInitialConfig(message)
-        return
-      } else {
-        console.log(message)
         return
       }
       return

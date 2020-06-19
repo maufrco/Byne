@@ -18,7 +18,8 @@ export const INITIAL_STATE: IStocksContext = {
   isConnected: false,
   subscribe: [''],
   monitor: new Map(),
-  follows: []
+  follows: [],
+  reconect: false
 }
 export type Action = {type: 'RECONNECT'|'FOLLOW'|'UNFOLLOW'|'SET_CHART'|'SET_INITIAL'|'SET_CONNECT'| 'SET_MONITOR'| 'SUBSCRIBE'| 'UNSUBSCRIBE' ; payload: any}
 
@@ -70,11 +71,9 @@ const WSReducer = (state: IStocksContext, action: Action) => {
     }
     case 'RECONNECT': {
       const newState = { ...state }
-      const msg = {
-        event: 'subscribe',
-        stocks: [newState.subscribe]
-      }
-      service.ws.current.send(JSON.stringify(msg))
+      newState.reconect = action.payload
+      return newState
+
       return newState
     }
     case 'SUBSCRIBE': {

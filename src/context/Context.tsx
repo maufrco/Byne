@@ -9,6 +9,7 @@ export interface IStocksContext {
   subscribe: WSSymbol[];
   follows: WSSymbol[];
   chartSelected?:WSSymbol;
+  reconect:boolean;
 }
 
 export type WSSymbol = ''|'IET'|'N'|'ZHT'|'V'|'ELY'|'TZW'|'FIK'|'T'|'ZQ'|'NP'|'MJ'|'KG'|'OY'|'ITN'|'OB'|'ACM'|'QQ'|'X'|'XLC'|'S';
