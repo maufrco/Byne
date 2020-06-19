@@ -1,34 +1,7 @@
 import React, { createContext, useReducer } from 'react'
+import WSReducer from '../reducer/Reducer'
 // eslint-disable-next-line no-unused-vars
-import WSReducer, { Action, INITIAL_STATE } from '../reducer/Reducer'
-
-export interface IStocksContext {
-  initialConfig: IConfig;
-  isConnected: boolean;
-  monitor: Map<string, number>;
-  subscribe: WSSymbol[];
-  follows: WSSymbol[];
-  chartSelected?:WSSymbol;
-  reconect:boolean;
-}
-
-export type WSSymbol = ''|'IET'|'N'|'ZHT'|'V'|'ELY'|'TZW'|'FIK'|'T'|'ZQ'|'NP'|'MJ'|'KG'|'OY'|'ITN'|'OB'|'ACM'|'QQ'|'X'|'XLC'|'S';
-type WSErrorEvent = 'invalid stock symbol'| 'invalid message' | 'message too long'
-type WSEvent = 'subscribe'|'unsubscribe'|'disconnecting'|'connected'|'error'|'stocks-update'|'disconected'
-
-export type IStock = {
-  symbol?: WSSymbol;
-  companyName?: string;
-  catchPhrase?: string;
-  basePrice?: number;
-}
-
-export interface IConfig {
-  event: WSEvent;
-  message: string;
-  stocksData:[IStock];
-  supportedSymbols: [WSSymbol]
-}
+import { Action, INITIAL_STATE } from '../model/Model'
 
 export const GlobalContext = createContext<{state: typeof INITIAL_STATE,
   dispatch:(action:Action) => void}>

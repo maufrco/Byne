@@ -1,11 +1,11 @@
 import React, { useContext } from 'react'
 // eslint-disable-next-line no-unused-vars
-import { GlobalContext, WSSymbol } from '../context/Context'
+import { WSSymbol } from '../model/Model'
+import { GlobalContext } from '../context/Context'
 import { WSService } from '../service/WSService'
 
-// eslint-disable-next-line react/prop-types
 const WSControl : React.FC = () => {
-  const { dispatch } = useContext(GlobalContext)
+  const { state, dispatch } = useContext(GlobalContext)
   const service = WSService.getInstance()
 
   service.ws.current.onerror = () => {
@@ -31,7 +31,7 @@ const WSControl : React.FC = () => {
       setTimeout(function () {
         console.log('reconect')
         WSService.init()
-        dispatch({ type: 'RECONNECT', payload: true })
+        dispatch({ type: 'SET_RECONNECT', payload: true })
       }, 5000)
 
       return
@@ -42,10 +42,7 @@ const WSControl : React.FC = () => {
   service.ws.current.onopen = (e) => {
     try {
       console.log('CONNECTING')
-      dispatch({ type: 'SET_CONNECT', payload: true }) // setIsConnected(true)
-      // setInitialConfig(message)
-      //   dispatch({ type: 'SET_CONNECT', payload: true })
-    //  dispatch({ type: 'SET_INITIAL', payload: message })
+      dispatch({ type: 'SET_CONNECT', payload: true })
     } catch (error) {
       console.error(error)
     }
@@ -59,7 +56,9 @@ const WSControl : React.FC = () => {
         dispatch({ type: 'SET_MONITOR', payload: [symbol, value] })
         return
       } else if (message.event === 'connected') {
-        dispatch({ type: 'SET_INITIAL', payload: message }) // setInitialConfig(message)
+        (state.reconnect)
+          ? dispatch({ type: 'RECONNECT', payload: message })
+          : dispatch({ type: 'SET_INITIAL', payload: message })
         return
       }
       return

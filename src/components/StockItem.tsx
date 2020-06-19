@@ -1,15 +1,16 @@
 import React, { useContext, useMemo } from 'react'
-// eslint-disable-next-line no-unused-vars
 
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn'
 import { Divider, Box, Hidden, Chip, FormControlLabel, Tooltip } from '@material-ui/core'
-// eslint-disable-next-line no-unused-vars
-import { GlobalContext, IStock, WSSymbol } from '../context/Context'
-import { useStyles } from '../style/Style'
+
 import Switch from '@material-ui/core/Switch'
 import IconButton from '@material-ui/core/IconButton'
 import TrendingUpIcon from '@material-ui/icons/TrendingUp'
 import DeleteIcon from '@material-ui/icons/Delete'
+import { useStyles } from '../style/Style'
+// eslint-disable-next-line no-unused-vars
+import { IStock, WSSymbol } from '../model/Model'
+import { GlobalContext } from '../context/Context'
 
 const StockItem: React.FC = props => {
   // eslint-disable-next-line react/prop-types
@@ -59,11 +60,13 @@ const StockItem: React.FC = props => {
           )
           }
           <Tooltip arrow title={open ? 'Deixar de acompanhar' : 'Começar acompanhar'} aria-label="follow">
-            <FormControlLabel
-              labelPlacement="top"
-              control={<Switch checked={open} color="primary" onChange={handleChange} name={symbol}/>}
-              label="Follow"
-            />
+            <span>
+              <FormControlLabel
+                labelPlacement="top"
+                control={<Switch checked={open} color="primary" onChange={handleChange} name={symbol}/>}
+                label="Follow"
+              />
+            </span>
           </Tooltip>
 
           <Tooltip arrow title="Visualizar no gráfico" aria-label="chart">

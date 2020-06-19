@@ -10,15 +10,11 @@ import { GlobalContext } from '../context/Context'
 Highcharts.setOptions(theme)
 
 const ChartStock: React.FC = () => {
-  // eslint-disable-next-line react/prop-types
-
   const { state: { monitor, chartSelected } } = useContext(GlobalContext)
-
   const [stockHistoy, setStockHistory] = useState<number[]>([])
-
   const price = useMemo(() => monitor.get(chartSelected!), [monitor, chartSelected])
-
   const chartRef: any = useRef()
+
   const allowChartUpdate = true
 
   useEffect(() => {
@@ -81,5 +77,4 @@ const ChartStock: React.FC = () => {
     </>
   )
 }
-
 export default ChartStock

@@ -1,15 +1,17 @@
 import React, { useContext } from 'react'
+
 import StockItem from './StockItem'
 import { Box, FormControl, InputLabel, NativeSelect } from '@material-ui/core'
 
 // eslint-disable-next-line no-unused-vars
-import { GlobalContext, IStock, WSSymbol } from '../context/Context'
+import { IStock, WSSymbol } from '../model/Model'
+import { GlobalContext } from '../context/Context'
+
 import { useStyles } from '../style/Style'
 
 const StockList: React.FC = () => {
   const classes = useStyles()
   const { state: { initialConfig, follows }, dispatch } = useContext(GlobalContext)
-  const [empty, setEmpty] = React.useState(false)
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     dispatch({ type: 'FOLLOW', payload: event.target.value })
@@ -41,7 +43,7 @@ const StockList: React.FC = () => {
           Empresas disponíveis
           </InputLabel>
           <NativeSelect
-            value={empty}
+            value={false}
             onChange={handleChange}
             inputProps={{
               name: 'age',

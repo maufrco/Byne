@@ -1,5 +1,5 @@
-import React, { useContext } from 'react'
-import { WSProvider, GlobalContext } from './context/Context'
+import React from 'react'
+import { WSProvider } from './context/Context'
 import StockList from './components/StockList'
 import ChartStock from './components/ChartStock'
 import Status from './components/Status'
@@ -22,25 +22,20 @@ const darkTheme = createMuiTheme({
   }
 })
 const App: React.FC = () => {
-  const { state: { isConnected } } = useContext(GlobalContext)
-
   return (
     <WSProvider>
       <WSControl></WSControl>
       <ThemeProvider theme={darkTheme}>
         <Typography component="div">
-
           <Box>
             <ChartStock></ChartStock>
           </Box>
           <Container maxWidth="lg" >
-
             <StockList></StockList>
-
           </Container>
-          <Box position="fixed"
-            bottom="0%"
-            right="0%"><Status ></Status></Box>
+          <Box position="fixed" bottom="0%" right="0%">
+            <Status ></Status>
+          </Box>
         </Typography>
       </ThemeProvider>
     </WSProvider>
