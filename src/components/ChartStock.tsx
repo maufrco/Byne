@@ -1,78 +1,55 @@
-import React, { useEffect, useState, useRef } from 'react'
-import { theme } from './ChartTheme'
+import React, { useEffect, useState, useRef, useContext, useMemo } from 'react'
+import { theme } from '../style/ChartTheme'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import Box from '@material-ui/core/Box'
 import ByneLogo from './../byne-verde.svg'
-import InputLabel from '@material-ui/core/InputLabel'
-import FormControl from '@material-ui/core/FormControl'
-import MenuItem from '@material-ui/core/MenuItem'
-import FormHelperText from '@material-ui/core/FormHelperText'
-import MonetizationOnIcon from '@material-ui/icons/MonetizationOn'
-import Select from '@material-ui/core/Select'
 // eslint-disable-next-line no-unused-vars
-import { useWs, WSSymbol } from './WSProvider'
-import { makeStyles, createStyles, Theme, Chip } from '@material-ui/core'
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    price: {
-      textAlign: 'center',
-      fontSize: 28,
-      fontWeight: 500,
-      color: '#f27a41'
-
-    }
-  })
-)
+import { GlobalContext } from '../context/Context'
 
 Highcharts.setOptions(theme)
 
-const ChartStock: React.FC = (children) => {
-  const { monitor, stockSymbols, isSubscribed } = useWs()
-  const classes = useStyles()
+const ChartStock: React.FC = () => {
+  // eslint-disable-next-line react/prop-types
+
+  const { state: { monitor, chartSelected } } = useContext(GlobalContext)
+
   const [stockHistoy, setStockHistory] = useState<number[]>([])
-  const [symbol, setSymbol] = useState<WSSymbol>()
+
+  const price = useMemo(() => monitor.get(chartSelected!), [monitor, chartSelected])
 
   const chartRef: any = useRef()
   const allowChartUpdate = true
 
-  const handleChange = (event: React.ChangeEvent<{ name?: string; value: unknown }>) => {
-    setSymbol(event.target.value as WSSymbol)
+  useEffect(() => {
+    (chartRef.current.chart.series[0].data.length <= 80)
+      ? (chartRef.current.chart.series[0].addPoint(price as number, true, false))
+      : (chartRef.current.chart.series[0].addPoint(price as number, true, true))
+  }, [price])
+
+  useEffect(() => {
     setStockHistory([])
-  }
-
-  useEffect(() => {
-    (stockHistoy.length <= 150)
-      ? (setStockHistory([...stockHistoy, [...[monitor.get(symbol as WSSymbol)]]] as number[]))
-      : (chartRef.current.chart.series[0].addPoint(monitor.get(symbol as WSSymbol) as number, true, true))
-  }, [monitor.get(symbol as WSSymbol)])
-
-  useEffect(() => {
-    if (!(isSubscribed(symbol as WSSymbol))) {
-      setStockHistory([])
-    }
-  },
-  [stockSymbols])
+  }, [chartSelected])
 
   const options: Highcharts.Options = {
     series: [
       {
         type: 'line',
         data: stockHistoy,
-        name: monitor.get(symbol!) ? `${symbol} - ${Number(monitor.get(symbol!)).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}` : ''
+        name: price ? `${chartSelected} - ${Number(price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}` : ''
       }
     ],
     xAxis: {
-
+      labels: {
+        enabled: false
+      },
       title: {
         text: null
       }
     },
     yAxis: {
-
-      labels: {
-        enabled: false
+      title: {
+        text: null
       }
     },
     credits: { enabled: false },
@@ -80,6 +57,7 @@ const ChartStock: React.FC = (children) => {
       text: ''
     },
     chart: {
+      alignTicks: false,
       backgroundColor: {
         linearGradient: { x1: 1, x2: 1, y1: 0, y2: 1 },
         stops: [
@@ -96,25 +74,6 @@ const ChartStock: React.FC = (children) => {
         <Box display="flex" m={0} p={0} bgcolor="rgb(33, 49, 75)">
           <Box p={3} flexGrow={1} >
             <img src={ByneLogo} style={{ color: '#FFF' }} alt="BYNE – Comunicação crítica, mais simples e eficiente" />
-          </Box>
-          <Box pr={4} display="row-reverse" justifyContent="flex-end">
-
-            <FormControl disabled = {stockSymbols.length <= 0} >
-              <InputLabel id="demo-simple-select-helper-label">Empresas</InputLabel>
-              <Select
-                labelId="demo-simple-select-helper-label"
-                id="demo-simple-select-helper"
-                value={symbol}
-                onChange={handleChange}
-              >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                {stockSymbols.map((stocksActived, index) => (<MenuItem key={index} value={stocksActived}>{stocksActived}</MenuItem>))}
-              </Select>
-              <FormHelperText>Selecione uma empresa para exibir no gráfico</FormHelperText>
-            </FormControl>
-
           </Box>
         </Box>
       </div>

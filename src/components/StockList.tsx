@@ -1,111 +1,63 @@
-import React from 'react'
-// eslint-disable-next-line no-unused-vars
-import { useWs, IStock, WSSymbol } from './WSProvider'
-
+import React, { useContext } from 'react'
 import StockItem from './StockItem'
-import { makeStyles, createStyles, Theme, useTheme } from '@material-ui/core/styles'
-import { Box, Fab, FormControl, InputLabel, Select, MenuItem, Input, Chip } from '@material-ui/core'
-import AddIcon from '@material-ui/icons/Add'
+import { Box, FormControl, InputLabel, NativeSelect } from '@material-ui/core'
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-      backgroundColor: theme.palette.background.paper
-    },
-    headerList: {
-      textAlign: 'right',
-      color: '#4cc3c4',
-      borderColor: '#4cc3c4'
-    },
-    addButtom: {
-      textAlign: 'right'
-    },
-    extendedIcon: {
-      marginRight: theme.spacing(1)
-    },
-    formControl: {
-      margin: theme.spacing(1),
-      minWidth: '66%',
-      textAlign: 'right'
-
-    },
-    chips: {
-      display: 'flex',
-      flexWrap: 'wrap'
-    },
-    chip: {
-      margin: 2
-    },
-    noLabel: {
-      marginTop: theme.spacing(3)
-    }
-  })
-)
+// eslint-disable-next-line no-unused-vars
+import { GlobalContext, IStock, WSSymbol } from '../context/Context'
+import { useStyles } from '../style/Style'
 
 const StockList: React.FC = () => {
   const classes = useStyles()
-  const { initialConfig } = useWs()
-  const [follows, setFollows] = React.useState<string[]>([])
-  const [open, setOpen] = React.useState(false)
+  const { state: { initialConfig, follows }, dispatch } = useContext(GlobalContext)
+  const [empty, setEmpty] = React.useState(false)
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setFollows([event.target.value] as string[])
+    dispatch({ type: 'FOLLOW', payload: event.target.value })
+    dispatch({ type: 'SUBSCRIBE', payload: event.target.value })
   }
 
-  const handleClose = () => {
-    setOpen(false)
-  }
+  const followList = follows.map((symbol:WSSymbol, index:number) => (symbol ? (
+    <div key={index}>
+      <StockItem>{symbol as WSSymbol}</StockItem>
+    </div>
+  ) : null)
+  )
 
-  const handleOpen = () => {
-    setOpen(true)
-  }
+  const unfollowSymbols = initialConfig.supportedSymbols.filter(a => !follows.includes(a))
+  const unfollowStock = initialConfig.stocksData.filter(a => unfollowSymbols.includes(a.symbol!))
 
+  const unfollowList = unfollowStock.map(
+    (stock:IStock, index:number) => (stock ? (
+      <option key={index} value={stock.symbol}>{stock.companyName}</option>
+    ) : null)
+  )
   return (
     <div style={{ width: '100%' }}>
 
       <Box boxShadow={3} p={4} m={2}>
 
         <FormControl className={classes.formControl}>
-          <InputLabel id="controlled-open-select-label">Adicionar
+          <InputLabel shrink htmlFor="age-native-label-placeholder">
+          Empresas disponíveis
           </InputLabel>
-          <Select
-            labelId="controlled-open-select-label"
-            id="controlled-open-select"
-            open={open}
-            onClose={handleClose}
-            onOpen={handleOpen}
-            value={follows}
+          <NativeSelect
+            value={empty}
             onChange={handleChange}
+            inputProps={{
+              name: 'age',
+              id: 'age-native-label-placeholder'
+            }}
           >
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
-            {initialConfig?.stocksData.map(
-        (stock, index) => {
-          return (stock ? (
-            <MenuItem key={index} value={stock.symbol}>{stock.companyName}</MenuItem>
-          ) : null)
-        })}
-          </Select>
-        </FormControl>
-        <Fab size="small" color="secondary" aria-label="add" variant="round" onClick={handleOpen}>
-          <AddIcon />
+            <option value="">Selecionar para listar abaixo e acompanhar</option>
+            {unfollowList}
+          </NativeSelect>
 
-        </Fab>
+        </FormControl>
 
         <Box borderBottom={2} mb={3} mt={1} component="div" display="block" className={classes.headerList}>
           Empresas
         </Box>
-        {initialConfig?.stocksData.map(
-        (stock, index) => {
-          return (stock ? (
-            <div key={index}>
-              <StockItem>{stock as IStock}</StockItem>
-            </div>
-          ) : null)
-        })}
-
+        {followList}
       </Box>
     </div>
   )
