@@ -1,8 +1,5 @@
-import React, { useContext, useMemo } from 'react'
-
-import MonetizationOnIcon from '@material-ui/icons/MonetizationOn'
-import { Divider, Box, Hidden, Chip, FormControlLabel, Tooltip } from '@material-ui/core'
-
+import React, { useContext, useMemo, useState } from 'react'
+import { Divider, Box, Hidden, FormControlLabel, Tooltip } from '@material-ui/core'
 import Switch from '@material-ui/core/Switch'
 import IconButton from '@material-ui/core/IconButton'
 import TrendingUpIcon from '@material-ui/icons/TrendingUp'
@@ -10,20 +7,20 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import { useStyles } from '../style/Style'
 // eslint-disable-next-line no-unused-vars
 import { IStock, WSSymbol } from '../model/Model'
-import { GlobalContext } from '../context/Context'
+import { GlobalContext } from '../context/Global'
+
+import Price from './Price'
 
 const StockItem: React.FC = props => {
   // eslint-disable-next-line react/prop-types
   const symbol = props.children as WSSymbol
-  const { state: { monitor, initialConfig, chartSelected }, dispatch } = useContext(GlobalContext)
-  const price = useMemo(() => monitor.get(symbol), [monitor, symbol])
+  const { state: { initialConfig, chartSelected }, dispatch } = useContext(GlobalContext)
   const classes = useStyles()
-  const [open, setOpen] = React.useState(true)
+  const [open, setOpen] = useState(true)
 
-  const getStock = (symbol:WSSymbol):IStock => (
-    initialConfig.stocksData.find((el:IStock) => el.symbol === symbol) as IStock
-  )
-  const stock = useMemo(() => getStock(symbol), [initialConfig, symbol])
+  const stock = useMemo(() => {
+    return initialConfig.stocksData.find((el:IStock) => el.symbol === symbol) as IStock
+  }, [initialConfig, symbol])
 
   const handleDelete = () => {
     dispatch({ type: 'UNSUBSCRIBE', payload: symbol })
@@ -53,12 +50,7 @@ const StockItem: React.FC = props => {
           <Hidden only={['sm', 'xs']}>{catchPhrase}</Hidden>
         </Box>
         <Box>
-          {price &&
-          (
-            <Chip color="primary" icon={<MonetizationOnIcon />}
-              label={Number(price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} />
-          )
-          }
+          <Price>{symbol}</Price>
           <Tooltip arrow title={open ? 'Deixar de acompanhar' : 'Começar acompanhar'} aria-label="follow">
             <span>
               <FormControlLabel

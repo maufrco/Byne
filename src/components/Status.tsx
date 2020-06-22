@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { GlobalContext } from '../context/Context'
+import { GlobalContext } from '../context/Global'
 import { useStyles } from '../style/Style'
 
 const Status: React.FC = () => {

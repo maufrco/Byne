@@ -1,5 +1,6 @@
 import React from 'react'
-import { WSProvider } from './context/Context'
+import { GlobalProvider } from './context/Global'
+import { MonitorProvider } from './context/Monitor'
 import StockList from './components/StockList'
 import ChartStock from './components/ChartStock'
 import Status from './components/Status'
@@ -23,22 +24,23 @@ const darkTheme = createMuiTheme({
 })
 const App: React.FC = () => {
   return (
-    <WSProvider>
-      <WSControl></WSControl>
+    <GlobalProvider>
+
       <ThemeProvider theme={darkTheme}>
         <Typography component="div">
-          <Box>
+          <MonitorProvider>
+            <WSControl></WSControl>
             <ChartStock></ChartStock>
-          </Box>
-          <Container maxWidth="lg" >
-            <StockList></StockList>
-          </Container>
+            <Container maxWidth="lg" >
+              <StockList></StockList>
+            </Container>
+          </MonitorProvider>
           <Box position="fixed" bottom="0%" right="0%">
             <Status ></Status>
           </Box>
         </Typography>
       </ThemeProvider>
-    </WSProvider>
+    </GlobalProvider>
   )
 }
 export default App

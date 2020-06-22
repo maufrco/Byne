@@ -3,7 +3,7 @@
 import { IStocksContext, Action } from '../model/Model'
 import { WSService } from '../service/WSService'
 
-const WSReducer = (state: IStocksContext, action: Action) => {
+const GlobalReducer = (state: IStocksContext, action: Action) => {
   const service = WSService.getInstance()
 
   switch (action.type) {
@@ -43,11 +43,6 @@ const WSReducer = (state: IStocksContext, action: Action) => {
       newState.chartSelected = action.payload
       return newState
     }
-    case 'SET_MONITOR': {
-      const newState = { ...state }
-      newState.monitor = new Map(newState.monitor.set(action.payload[0], action.payload[1]))
-      return newState
-    }
     case 'FOLLOW': {
       const newState = { ...state }
       newState.follows = [...newState.follows, ...[action.payload]]
@@ -79,4 +74,4 @@ const WSReducer = (state: IStocksContext, action: Action) => {
     default: return state
   }
 }
-export default WSReducer
+export default GlobalReducer

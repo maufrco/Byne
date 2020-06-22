@@ -1,11 +1,15 @@
 import React, { useContext } from 'react'
 // eslint-disable-next-line no-unused-vars
 import { WSSymbol } from '../model/Model'
-import { GlobalContext } from '../context/Context'
+import { GlobalContext } from '../context/Global'
+import { MonitorContext } from '../context/Monitor'
+
 import { WSService } from '../service/WSService'
 
 const WSControl : React.FC = () => {
+  const { wsdispatch } = useContext(MonitorContext)
   const { state, dispatch } = useContext(GlobalContext)
+
   const service = WSService.getInstance()
 
   service.ws.current.onerror = () => {
@@ -53,7 +57,7 @@ const WSControl : React.FC = () => {
       if (message.event === 'stocks-update') {
         const symbol = (Object.keys(message.stocks)[0]) as WSSymbol
         const value = (Object.values(message.stocks)[0])
-        dispatch({ type: 'SET_MONITOR', payload: [symbol, value] })
+        wsdispatch({ type: 'SET_MONITOR', payload: [symbol, value] })
         return
       } else if (message.event === 'connected') {
         (state.reconnect)

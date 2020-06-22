@@ -1,11 +1,11 @@
 import React, { useContext } from 'react'
-
+import Pagination from '@material-ui/lab/Pagination'
 import StockItem from './StockItem'
 import { Box, FormControl, InputLabel, NativeSelect } from '@material-ui/core'
 
 // eslint-disable-next-line no-unused-vars
 import { IStock, WSSymbol } from '../model/Model'
-import { GlobalContext } from '../context/Context'
+import { GlobalContext } from '../context/Global'
 
 import { useStyles } from '../style/Style'
 
@@ -39,15 +39,15 @@ const StockList: React.FC = () => {
       <Box boxShadow={3} p={4} m={2}>
 
         <FormControl className={classes.formControl}>
-          <InputLabel shrink htmlFor="age-native-label-placeholder">
+          <InputLabel shrink htmlFor="native-label-placeholder">
           Empresas disponíveis
           </InputLabel>
           <NativeSelect
             value={false}
             onChange={handleChange}
             inputProps={{
-              name: 'age',
-              id: 'age-native-label-placeholder'
+              name: 'stocks',
+              id: 'native-label-placeholder'
             }}
           >
             <option value="">Selecionar para listar abaixo e acompanhar</option>
@@ -59,7 +59,11 @@ const StockList: React.FC = () => {
         <Box borderBottom={2} mb={3} mt={1} component="div" display="block" className={classes.headerList}>
           Empresas
         </Box>
+
         {followList}
+        <div className={classes.root}>
+          <Pagination count={10} />
+        </div>
       </Box>
     </div>
   )

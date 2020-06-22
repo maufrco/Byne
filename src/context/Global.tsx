@@ -1,5 +1,5 @@
 import React, { createContext, useReducer } from 'react'
-import WSReducer from '../reducer/Reducer'
+import WSReducer from '../reducer/Global'
 // eslint-disable-next-line no-unused-vars
 import { Action, INITIAL_STATE } from '../model/Model'
 
@@ -13,7 +13,7 @@ export const GlobalContext = createContext<{state: typeof INITIAL_STATE,
 export const GlobalConsumer = GlobalContext.Consumer
 
 // eslint-disable-next-line react/prop-types
-export const WSProvider: React.FC = ({ children }) => {
+export const GlobalProvider: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer(WSReducer, INITIAL_STATE)
   const value = { state, dispatch }
 

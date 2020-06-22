@@ -5,12 +5,14 @@ import HighchartsReact from 'highcharts-react-official'
 import Box from '@material-ui/core/Box'
 import ByneLogo from './../byne-verde.svg'
 // eslint-disable-next-line no-unused-vars
-import { GlobalContext } from '../context/Context'
+import { GlobalContext } from '../context/Global'
+import { MonitorContext } from '../context/Monitor'
 
 Highcharts.setOptions(theme)
 
 const ChartStock: React.FC = () => {
-  const { state: { monitor, chartSelected } } = useContext(GlobalContext)
+  const { state: { chartSelected } } = useContext(GlobalContext)
+  const { ws: { monitor } } = useContext(MonitorContext)
   const [stockHistoy, setStockHistory] = useState<number[]>([])
   const price = useMemo(() => monitor.get(chartSelected!), [monitor, chartSelected])
   const chartRef: any = useRef()
@@ -19,8 +21,8 @@ const ChartStock: React.FC = () => {
 
   useEffect(() => {
     (chartRef.current.chart.series[0].data.length <= 80)
-      ? (chartRef.current.chart.series[0].addPoint(price as number, true, false))
-      : (chartRef.current.chart.series[0].addPoint(price as number, true, true))
+      ? (chartRef.current.chart.series[0].addPoint(price as number, false, false, true))
+      : (chartRef.current.chart.series[0].addPoint(price as number, false, false, true))
   }, [price])
 
   useEffect(() => {
