@@ -1,5 +1,4 @@
 import React, { useContext } from 'react'
-import Pagination from '@material-ui/lab/Pagination'
 import StockItem from './StockItem'
 import { Box, FormControl, InputLabel, NativeSelect } from '@material-ui/core'
 
@@ -61,9 +60,7 @@ const StockList: React.FC = () => {
         </Box>
 
         {followList}
-        <div className={classes.root}>
-          <Pagination count={10} />
-        </div>
+
       </Box>
     </div>
   )
